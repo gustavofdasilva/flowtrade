@@ -1,8 +1,8 @@
 package handler
 
 import (
+	response "api-gateway/internal/adapters/http"
 	"api-gateway/internal/adapters/http/dto"
-	"api-gateway/internal/adapters/http/response"
 	"api-gateway/internal/core/domain"
 	"api-gateway/internal/core/ports"
 	"log"
