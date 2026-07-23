@@ -14,6 +14,12 @@ type Config struct {
 	Port   string
 
 	AccountServiceAddr string
+
+	Auth AuthConfig
+}
+
+type AuthConfig struct {
+	JwtSecret string
 }
 
 func LoadConfig() *Config {
@@ -22,10 +28,12 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		AppEnv: getEnv("APP_ENV", "development"),
-		Port:   getEnv("PORT", "8080"),
-
+		AppEnv:             getEnv("APP_ENV", "development"),
+		Port:               getEnv("PORT", "8080"),
 		AccountServiceAddr: getEnv("ACCOUNT_SERVICE_ADDR", "0.0.0.0"),
+		Auth: AuthConfig{
+			JwtSecret: getEnv("JWT_SECRET", "super-secret-key-change-me"),
+		},
 	}
 }
 

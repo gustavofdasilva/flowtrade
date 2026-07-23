@@ -4,6 +4,7 @@ import (
 	grpcclient "api-gateway/internal/adapters/grpc/client"
 	"api-gateway/internal/adapters/http/handler"
 	"api-gateway/internal/adapters/http/routes"
+	"api-gateway/internal/adapters/jwt"
 	"api-gateway/internal/config"
 	"log"
 
@@ -29,7 +30,10 @@ func main() {
 	// r.Use(middleware.Logging(), middleware.RateLimit())
 
 	router := gin.Default()
-	routes.RegisterAccountRoutes(router, accountHandler)
+
+	validator := jwt.NewJWTValidator(cfg.Auth.JwtSecret)
+
+	routes.RegisterAccountRoutes(router, accountHandler, validator)
 
 	log.Printf("Server running at %s", cfg.Port)
 	if err := router.Run(":" + cfg.Port); err != nil {

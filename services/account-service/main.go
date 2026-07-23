@@ -26,28 +26,27 @@ func main() {
 	defer db.Close()
 
 	passwordHasher := security.NewBcryptHasher(12)
-	// tokenProvider := security.NewJWTTokenProvider([]byte(cfg.Auth.JWTSecret), cfg.Auth.JWTTokenDuration)
+	tokenProvider := security.NewJWTTokenProvider([]byte(cfg.Auth.JWTSecret), cfg.Auth.JWTTokenDuration)
 
 	userRepo := repository.NewPostgresUserRepository(db)
-	// authRepo := repository.NewPostgresAuthRepository(db)
+	authRepo := repository.NewPostgresAuthRepository(db)
 
 	userService := services.NewUserService(
 		userRepo,
 		passwordHasher,
 	)
 
-	// authService := services.NewAuthService(
-	// 	userRepo,
-	// 	authRepo,
-	// 	passwordHasher,
-	// 	tokenProvider,
-	// 	cfg.Auth.RefreshTokenDuration,
-	// )
+	authService := services.NewAuthService(
+		userRepo,
+		authRepo,
+		passwordHasher,
+		tokenProvider,
+		cfg.Auth.RefreshTokenDuration,
+	)
 
 	grpcServer := grpc.NewServer()
-	pb.RegisterAccountServiceServer(grpcServer, handler.NewUserGRPCHandler(userService))
+	pb.RegisterAccountServiceServer(grpcServer, handler.NewAccountGRPCHandler(authService, userService))
 
-	log.Println("Trying to upping to grpc server")
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", strings.TrimLeft(cfg.GRPCPort, ":"))) // :50051
 	if err := grpcServer.Serve(lis); err != nil {
 		log.Fatal(err)

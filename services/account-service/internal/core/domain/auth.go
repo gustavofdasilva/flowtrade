@@ -21,7 +21,7 @@ type RefreshToken struct {
 }
 
 func (r *RefreshToken) IsValid() bool {
-	if !r.RevokedAt.IsZero() || time.Now().After(r.ExpiresAt) {
+	if r.RevokedAt != nil || time.Now().After(r.ExpiresAt) {
 		return false
 	}
 

@@ -33,3 +33,11 @@ type UpdateUserInput struct {
 type RefreshTokenInput struct {
 	RefreshToken string
 }
+
+type LogoutInput struct {
+	Token string
+}
+
+type UserIDInput struct {
+	ID string
+}

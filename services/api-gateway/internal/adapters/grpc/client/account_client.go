@@ -28,3 +28,59 @@ func (c *AccountClient) Register(ctx context.Context, input domain.RegisterInput
 
 	return err
 }
+
+func (c *AccountClient) Login(ctx context.Context, input domain.LoginInput) (*domain.AuthOutput, error) {
+	token, err := c.client.Login(ctx, &pb.LoginRequest{
+		Email:    input.Email,
+		Password: input.Password,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.AuthOutput{
+		AccessToken:  token.AccessToken,
+		RefreshToken: token.RefreshToken,
+		User: domain.UserOutput{
+			ID:       token.User.Id,
+			Username: token.User.Username,
+			Email:    token.User.Email,
+		},
+	}, nil
+}
+
+func (c *AccountClient) RefreshToken(ctx context.Context, input domain.RefreshTokenInput) (*domain.AuthOutput, error) {
+	token, err := c.client.RefreshToken(ctx, &pb.RefreshTokenRequest{
+		RefreshToken: input.RefreshToken,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &domain.AuthOutput{
+		AccessToken:  token.AccessToken,
+		RefreshToken: token.RefreshToken,
+		User: domain.UserOutput{
+			ID:       token.User.Id,
+			Username: token.User.Username,
+			Email:    token.User.Email,
+		},
+	}, nil
+}
+
+func (c *AccountClient) Logout(ctx context.Context, input domain.LogoutInput) error {
+	//TODO: Remake pb funcs to support LogoutRequest
+	_, err := c.client.Logout(ctx, &pb.RefreshTokenRequest{
+		RefreshToken: input.Token,
+	})
+
+	return err
+}
+
+func (c *AccountClient) LogoutAll(ctx context.Context, input domain.UserIDInput) error {
+	_, err := c.client.LogoutAll(ctx, &pb.LogoutAllRequest{
+		UserId: input.ID,
+	})
+
+	return err
+}
