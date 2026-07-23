@@ -10,8 +10,8 @@ import (
 )
 
 type Config struct {
-	AppEnv string
-	Port   string
+	AppEnv   string
+	GRPCPort string
 
 	DB   DBConfig
 	Auth AuthConfig
@@ -41,8 +41,8 @@ func LoadConfig() *Config {
 	}
 
 	return &Config{
-		AppEnv: getEnv("APP_ENV", "development"),
-		Port:   getEnv("PORT", "8080"),
+		AppEnv:   getEnv("APP_ENV", "development"),
+		GRPCPort: getEnv("GRPC_PORT", "50051"),
 
 		DB: DBConfig{
 			Host:                   getEnv("DB_HOST", "localhost"),

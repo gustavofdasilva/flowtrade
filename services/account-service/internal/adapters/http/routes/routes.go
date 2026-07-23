@@ -1,10 +1,14 @@
-package http
+package routes
 
-import "github.com/gin-gonic/gin"
+import (
+	"account-service/internal/adapters/http/handler"
+
+	"github.com/gin-gonic/gin"
+)
 
 //TODO: Add auth middleware
 
-func RegisterUserRoutes(router *gin.Engine, handler *UserHandler) {
+func RegisterUserRoutes(router *gin.Engine, handler *handler.UserHandler) {
 	authGroup := router.Group("/users")
 	{
 		authGroup.POST("/", handler.Register)
@@ -14,7 +18,7 @@ func RegisterUserRoutes(router *gin.Engine, handler *UserHandler) {
 	}
 }
 
-func RegisterAuthRoutes(router *gin.Engine, handler *AuthHandler) {
+func RegisterAuthRoutes(router *gin.Engine, handler *handler.AuthHandler) {
 	authGroup := router.Group("/auth")
 	{
 		authGroup.POST("/login", handler.Login)

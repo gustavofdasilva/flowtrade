@@ -1,0 +1,61 @@
+syntax = "proto3";
+
+package hello;
+
+import "google/protobuf/empty.proto";
+
+option go_package = "./pb";
+service AccountService {
+  rpc Register(RegisterRequest) returns (google.protobuf.Empty);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  rpc RefreshToken(RefreshTokenRequest) returns (LoginResponse);
+  rpc Logout(RefreshTokenRequest) returns (google.protobuf.Empty);
+  rpc LogoutAll(LogoutAllRequest) returns (google.protobuf.Empty);
+
+  rpc UpdateUser(UpdateUserRequest) returns (UserInfo);
+  rpc DeleteUser(UserIDRequest) returns (google.protobuf.Empty);
+  rpc GetMe(UserIDRequest) returns (UserInfo);
+  
+}
+
+message RegisterRequest {
+    string username = 1;
+    string email = 2;
+    string password = 3;
+}
+
+message LoginRequest {
+    string email    = 1;
+    string password = 2;
+}
+
+message UserInfo {
+    string id       = 1;
+    string username = 2;
+    string email    = 3;
+}
+
+message LoginResponse {
+    string access_token  = 1;
+    string refresh_token = 2;
+    UserInfo user        = 3;
+}
+
+message RefreshTokenRequest {
+    string refresh_token = 1;
+}
+
+message LogoutAllRequest {
+    string user_id = 1;
+}
+
+message UpdateUserRequest {
+    string id       = 1;
+    string username = 2;
+    string email    = 3;
+    string password = 4;
+}
+
+message UserIDRequest {
+    string id       = 1;
+}

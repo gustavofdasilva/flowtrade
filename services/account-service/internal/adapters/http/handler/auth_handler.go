@@ -1,8 +1,8 @@
-package http
+package handler
 
 import (
-	"account-service/internal/adapters/handlers/http/dto"
-	"account-service/internal/adapters/handlers/http/response"
+	"account-service/internal/adapters/http/dto"
+	"account-service/internal/adapters/http/response"
 	"account-service/internal/core/domain"
 	"account-service/internal/core/ports"
 	"errors"
