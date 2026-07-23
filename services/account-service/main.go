@@ -1,6 +1,7 @@
 package main
 
 import (
+	"account-service/internal/adapters/database"
 	"account-service/internal/adapters/handlers/http"
 	"account-service/internal/adapters/repository"
 	"account-service/internal/adapters/security"
@@ -14,7 +15,7 @@ import (
 func main() {
 	cfg := config.LoadConfig()
 
-	db, err := repository.NewPostgresDB(cfg.DB)
+	db, err := database.NewPostgresDB(cfg.DB)
 	if err != nil {
 		log.Fatalf("Erro no banco de dados: %v", err)
 	}

@@ -1,4 +1,4 @@
-package repository
+package database
 
 import (
 	"account-service/internal/config"
