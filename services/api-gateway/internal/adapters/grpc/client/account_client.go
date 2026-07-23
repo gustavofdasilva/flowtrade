@@ -84,3 +84,48 @@ func (c *AccountClient) LogoutAll(ctx context.Context, input domain.UserIDInput)
 
 	return err
 }
+
+func (c *AccountClient) UpdateUser(ctx context.Context, input domain.UpdateUserInput) (*domain.UserOutput, error) {
+	user, err := c.client.UpdateUser(ctx, &pb.UpdateUserRequest{
+		Id:       input.ID,
+		Username: input.Username,
+		Email:    input.Email,
+		Password: input.Password,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	newUser := domain.UserOutput{
+		ID:       user.Id,
+		Username: user.Username,
+		Email:    user.Email,
+	}
+
+	return &newUser, err
+}
+
+func (c *AccountClient) GetMe(ctx context.Context, input domain.UserIDInput) (*domain.UserOutput, error) {
+	userInfo, err := c.client.GetMe(ctx, &pb.UserIDRequest{
+		Id: input.ID,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	user := domain.UserOutput{
+		ID:       userInfo.Id,
+		Username: userInfo.Username,
+		Email:    userInfo.Email,
+	}
+
+	return &user, err
+}
+
+func (c *AccountClient) DeleteUser(ctx context.Context, input domain.UserIDInput) error {
+	_, err := c.client.DeleteUser(ctx, &pb.UserIDRequest{
+		Id: input.ID,
+	})
+
+	return err
+}

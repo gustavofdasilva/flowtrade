@@ -5,6 +5,7 @@ import (
 	"api-gateway/internal/adapters/http/response"
 	"api-gateway/internal/core/domain"
 	"api-gateway/internal/core/ports"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -100,7 +101,7 @@ func (h *AccountHandler) Refresh(c *gin.Context) {
 		},
 	}
 
-	response.Success(c, http.StatusOK, "Login successful", data)
+	response.Success(c, http.StatusOK, "Refresh successful", data)
 }
 
 func (h *AccountHandler) Logout(c *gin.Context) {
@@ -131,6 +132,76 @@ func (h *AccountHandler) LogoutAll(c *gin.Context) {
 	}
 
 	err := h.accountClient.LogoutAll(c.Request.Context(), input)
+	if err != nil {
+		response.Error(c, grpcStatusToHTTP(err), err)
+		return
+	}
+
+	c.JSON(http.StatusNoContent, nil)
+}
+
+func (h *AccountHandler) GetMe(c *gin.Context) {
+	userID := c.GetString("userID")
+
+	input := domain.UserIDInput{
+		ID: userID,
+	}
+
+	res, err := h.accountClient.GetMe(c.Request.Context(), input)
+	if err != nil {
+		response.Error(c, grpcStatusToHTTP(err), err)
+		return
+	}
+
+	data := dto.UserResponse{
+		ID:       res.ID,
+		Username: res.Username,
+		Email:    res.Email,
+	}
+
+	response.Success(c, http.StatusOK, "User info retrieved", data)
+}
+
+func (h *AccountHandler) UpdateUser(c *gin.Context) {
+	userID := c.GetString("userID")
+	var req dto.UpdateUserRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		response.Error(c, http.StatusBadRequest, err)
+		return
+	}
+
+	input := domain.UpdateUserInput{
+		ID:       userID,
+		Username: req.Username,
+		Email:    req.Email,
+		Password: req.Password,
+	}
+
+	log.Println(userID)
+
+	res, err := h.accountClient.UpdateUser(c.Request.Context(), input)
+	if err != nil {
+		response.Error(c, grpcStatusToHTTP(err), err)
+		return
+	}
+
+	data := dto.UserResponse{
+		ID:       res.ID,
+		Username: res.Username,
+		Email:    res.Email,
+	}
+
+	response.Success(c, http.StatusOK, "User info updated", data)
+}
+
+func (h *AccountHandler) DeleteUser(c *gin.Context) {
+	userID := c.GetString("userID")
+
+	input := domain.UserIDInput{
+		ID: userID,
+	}
+
+	err := h.accountClient.DeleteUser(c.Request.Context(), input)
 	if err != nil {
 		response.Error(c, grpcStatusToHTTP(err), err)
 		return

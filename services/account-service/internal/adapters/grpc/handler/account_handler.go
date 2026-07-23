@@ -99,3 +99,45 @@ func (h *AccountGRPCHandler) Register(ctx context.Context, req *pb.RegisterReque
 
 	return &emptypb.Empty{}, nil
 }
+
+func (h *AccountGRPCHandler) UpdateUser(ctx context.Context, req *pb.UpdateUserRequest) (*pb.UserInfo, error) {
+	user := domain.User{
+		ID:       uuid.MustParse(req.Id),
+		Username: req.Username,
+		Email:    req.Email,
+		Password: req.Password,
+	}
+
+	newUser, err := h.userSvc.Update(user)
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+
+	return &pb.UserInfo{
+		Id:       user.ID.String(),
+		Username: newUser.Username,
+		Email:    newUser.Email,
+	}, nil
+}
+
+func (h *AccountGRPCHandler) GetMe(ctx context.Context, req *pb.UserIDRequest) (*pb.UserInfo, error) {
+	user, err := h.userSvc.GetByID(uuid.MustParse(req.Id))
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+
+	return &pb.UserInfo{
+		Id:       user.ID.String(),
+		Username: user.Username,
+		Email:    user.Email,
+	}, nil
+}
+
+func (h *AccountGRPCHandler) DeleteUser(ctx context.Context, req *pb.UserIDRequest) (*emptypb.Empty, error) {
+	err := h.userSvc.Delete(uuid.MustParse(req.Id))
+	if err != nil {
+		return nil, status.Errorf(codes.InvalidArgument, err.Error())
+	}
+
+	return &emptypb.Empty{}, nil
+}
