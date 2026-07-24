@@ -13,5 +13,4 @@ type AccountService interface {
 	Deposit(id uuid.UUID, userID uuid.UUID, amount decimal.Decimal) (*domain.Account, error)
 	Withdrawal(id uuid.UUID, userID uuid.UUID, amount decimal.Decimal) (*domain.Account, error)
 	CheckBalance(id uuid.UUID, userID uuid.UUID, amount decimal.Decimal) (bool, error)
-	// GetStatement(userID uuid.UUID, page, limit int) ([]*domain.LedgerEntry, error)
 }

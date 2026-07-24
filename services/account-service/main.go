@@ -1,7 +1,7 @@
 package main
 
 import (
-	"account-service/internal/adapters/database"
+	database "account-service/internal/adapters/database/postgres"
 	"account-service/internal/adapters/grpc/handler"
 	"account-service/internal/adapters/repository"
 	"account-service/internal/adapters/security"
