@@ -13,5 +13,6 @@ var (
 	ErrInvalidRefreshToken  = errors.New("invalid refresh token")
 	ErrRefreshTokenNotFound = errors.New("refresh token not found")
 	ErrRefreshTokenExpired  = errors.New("refresh token expired")
+	ErrAccountNotFound      = errors.New("account not found")
 	ErrUnexpectedError      = errors.New("unexpected error occurred")
 )
