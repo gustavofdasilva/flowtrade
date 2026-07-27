@@ -20,5 +20,5 @@ CREATE TABLE IF NOT EXISTS assets (
     "updated_at"  TIMESTAMPTZ  NOT NULL DEFAULT NOW()
 );
 
-CREATE INDEX idx_assets_ticker   ON assets(ticker);
-CREATE INDEX idx_assets_is_active ON assets(is_active);
+CREATE INDEX IF NOT EXISTS idx_assets_ticker   ON assets(ticker);
+CREATE INDEX IF NOT EXISTS idx_assets_is_active ON assets(is_active);
