@@ -15,6 +15,12 @@ const (
 	AssetTypeCrypto AssetType = "CRYPTO"
 )
 
+type AssetPriceFilter struct {
+	From     *time.Time
+	To       *time.Time
+	Interval *time.Duration
+}
+
 type Asset struct {
 	ID             uuid.UUID
 	Ticker         string

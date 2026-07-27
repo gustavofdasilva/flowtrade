@@ -6,6 +6,7 @@ import (
 	"database/sql"
 
 	"github.com/google/uuid"
+	"github.com/lib/pq"
 )
 
 type PostgresAssetRepository struct {
@@ -16,7 +17,7 @@ func NewPostgresAssetRepository(db *sql.DB) *PostgresAssetRepository {
 	return &PostgresAssetRepository{db: db}
 }
 
-func (repo *PostgresAssetRepository) GetAll(ctx context.Context, offset, limit int) ([]domain.Asset, int, error) {
+func (repo *PostgresAssetRepository) GetAll(ctx context.Context, offset, limit int, typeFilter []domain.AssetType) ([]domain.Asset, int, error) {
 	query := `
 		SELECT 
 			id, 
@@ -45,12 +46,13 @@ func (repo *PostgresAssetRepository) GetAll(ctx context.Context, offset, limit i
 				COUNT(a.id) OVER() as total 
 			FROM assets a
 			LEFT JOIN asset_prices ap ON a.id = ap.asset_id
+			WHERE (cardinality($1) = 0 OR a.type = ANY($1))
 			ORDER BY a.id, ap.created_at DESC
-			LIMIT $1 OFFSET $2
+			LIMIT $2 OFFSET $3
 		);	
 	`
 
-	rows, err := repo.db.QueryContext(ctx, query, limit, offset)
+	rows, err := repo.db.QueryContext(ctx, query, pq.Array(typeFilter), limit, offset)
 	if err != nil {
 		return nil, 0, err
 	}
@@ -124,7 +126,14 @@ func (repo *PostgresAssetRepository) GetByTicker(ctx context.Context, ticker str
 	return &asset, nil
 }
 
-func (repo *PostgresAssetRepository) GetPricesByTicker(ctx context.Context, ticker string) ([]domain.AssetPrice, error) {
+func (repo *PostgresAssetRepository) GetPricesByTicker(ctx context.Context, ticker string, filter domain.AssetPriceFilter) ([]domain.AssetPrice, error) {
+
+	filterClause := `
+		AND ($2 IS NULL OR created_at >= $2)
+		AND ($3 IS NULL OR created_at <= $3)
+		AND ($4 IS NULL OR created_at >= NOW() - $4::interval)
+	`
+
 	query := `
 		SELECT 
 			id,
@@ -133,10 +142,11 @@ func (repo *PostgresAssetRepository) GetPricesByTicker(ctx context.Context, tick
 			created_at 
 		FROM asset_prices ap 
 		WHERE ap.asset_id = (SELECT id FROM assets WHERE ticker = $1)
+		` + filterClause + `
 		ORDER BY created_at DESC;
 	`
 
-	rows, err := repo.db.QueryContext(ctx, query, ticker)
+	rows, err := repo.db.QueryContext(ctx, query, ticker, filter.From, filter.To, filter.Interval)
 	if err != nil {
 		return nil, err
 	}

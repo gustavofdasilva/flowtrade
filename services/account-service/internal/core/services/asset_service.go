@@ -19,10 +19,10 @@ func NewAssetService(repo ports.AssetRepository) *AssetService {
 	}
 }
 
-func (s *AssetService) GetAll(ctx context.Context, page, limit int) ([]domain.Asset, int, error) {
+func (s *AssetService) GetAll(ctx context.Context, page, limit int, typeFilter []domain.AssetType) ([]domain.Asset, int, error) {
 	offset := (page - 1) * limit
 
-	return s.repo.GetAll(ctx, offset, limit)
+	return s.repo.GetAll(ctx, offset, limit, typeFilter)
 
 }
 
@@ -30,8 +30,13 @@ func (s *AssetService) GetByTicker(ctx context.Context, ticker string) (*domain.
 	return s.repo.GetByTicker(ctx, ticker)
 }
 
-func (s *AssetService) GetPricesByTicker(ctx context.Context, ticker string) ([]domain.AssetPrice, error) {
-	return s.repo.GetPricesByTicker(ctx, ticker)
+func (s *AssetService) GetPricesByTicker(ctx context.Context, ticker string, filter *domain.AssetPriceFilter) ([]domain.AssetPrice, error) {
+	var repoFilter domain.AssetPriceFilter
+	if filter != nil {
+		repoFilter = *filter
+	}
+
+	return s.repo.GetPricesByTicker(ctx, ticker, repoFilter)
 }
 
 func (s *AssetService) CreateAsset(ctx context.Context, asset domain.Asset) (*domain.Asset, error) {
