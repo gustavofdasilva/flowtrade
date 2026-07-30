@@ -34,7 +34,7 @@ func (s *AccountService) Create(ctx context.Context, userID uuid.UUID, currency 
 		Currency: currency,
 	}
 
-	return s.accountRepo.Create(ctx, &account)
+	return s.accountRepo.Create(ctx, account)
 }
 
 func (s *AccountService) Deposit(ctx context.Context, id uuid.UUID, userID uuid.UUID, amount decimal.Decimal) (*domain.Account, error) {

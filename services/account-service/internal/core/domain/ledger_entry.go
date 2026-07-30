@@ -16,6 +16,10 @@ const (
 	LedgerTypeTradeCredit = "TRADE_CREDIT"
 )
 
+func (l *LedgerType) String() string {
+	return string(*l)
+}
+
 type LedgerEntry struct {
 	ID           uuid.UUID
 	AccountID    uuid.UUID

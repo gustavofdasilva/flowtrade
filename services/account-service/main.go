@@ -30,6 +30,11 @@ func main() {
 
 	userRepo := repository.NewPostgresUserRepository(db)
 	authRepo := repository.NewPostgresAuthRepository(db)
+	accountRepo := repository.NewPostgresAccountRepository(db)
+	assetRepo := repository.NewPostgresAssetRepository(db)
+	ledgerRepo := repository.NewPostgresLedgerRepository(db)
+
+	txManager := database.NewTransactionManager(db)
 
 	userService := services.NewUserService(
 		userRepo,
@@ -44,8 +49,28 @@ func main() {
 		cfg.Auth.RefreshTokenDuration,
 	)
 
+	ledgerService := services.NewLedgerService(
+		ledgerRepo,
+	)
+
+	accountService := services.NewAccountService(
+		txManager,
+		accountRepo,
+		ledgerRepo,
+	)
+
+	assetService := services.NewAssetService(
+		assetRepo,
+	)
+
 	grpcServer := grpc.NewServer()
-	pb.RegisterAccountServiceServer(grpcServer, handler.NewAccountGRPCHandler(authService, userService))
+	pb.RegisterAccountServiceServer(grpcServer, handler.NewAccountGRPCHandler(
+		authService,
+		userService,
+		ledgerService,
+		accountService,
+		assetService,
+	))
 
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%s", strings.TrimLeft(cfg.GRPCPort, ":"))) // :50051
 	if err := grpcServer.Serve(lis); err != nil {

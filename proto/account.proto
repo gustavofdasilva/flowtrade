@@ -6,16 +6,30 @@ import "google/protobuf/empty.proto";
 
 option go_package = "./pb";
 service AccountService {
-  rpc Register(RegisterRequest) returns (google.protobuf.Empty);
-  rpc Login(LoginRequest) returns (LoginResponse);
-  rpc RefreshToken(RefreshTokenRequest) returns (LoginResponse);
-  rpc Logout(RefreshTokenRequest) returns (google.protobuf.Empty);
-  rpc LogoutAll(LogoutAllRequest) returns (google.protobuf.Empty);
-
-  rpc UpdateUser(UpdateUserRequest) returns (UserInfo);
-  rpc DeleteUser(UserIDRequest) returns (google.protobuf.Empty);
-  rpc GetMe(UserIDRequest) returns (UserInfo);
+    rpc Register(RegisterRequest) returns (google.protobuf.Empty);
+    rpc Login(LoginRequest) returns (LoginResponse);
+    rpc RefreshToken(RefreshTokenRequest) returns (LoginResponse);
+    rpc Logout(RefreshTokenRequest) returns (google.protobuf.Empty);
+    rpc LogoutAll(LogoutAllRequest) returns (google.protobuf.Empty);
+    rpc UpdateUser(UpdateUserRequest) returns (UserInfo);
+    rpc DeleteUser(UserIDRequest) returns (google.protobuf.Empty);
+    rpc GetMe(UserIDRequest) returns (UserInfo);
   
+    rpc GetStatement(GetStatementRequest) returns (GetStatementResponse);
+  
+    rpc Get(AccountTenantIDRequest) returns (AccountResponse);
+    rpc Create(CreateAccountRequest) returns (AccountResponse);
+    rpc Deposit(AccountTenantIDWithAmountRequest) returns (AccountResponse);
+    rpc Withdrawal(AccountTenantIDWithAmountRequest) returns (AccountResponse);
+    rpc CheckBalance(AccountTenantIDWithAmountRequest) returns (AccountCheckResponse);
+
+    rpc GetAll(AssetGetAllRequest) returns (PaginatedAssetResponse);
+	rpc GetByTicker(AssetGetByTickerRequest) returns (AssetResponse);
+	rpc GetPricesByTicker(AssetGetPricesByTicker) returns (ManyAssetPriceResponse);
+	rpc CreateAsset(AssetCreateAssetRequest) returns (AssetResponse);
+	rpc UpdateAssetPriceByTicker(AssetUpdateAssetPriceByTickerRequest) returns (AssetResponse);
+	rpc UpdateAsset(AssetUpdateAssetRequest) returns (AssetResponse);
+	rpc Delete(AssetDeleteRequest) returns (AssetResponse);
 }
 
 message RegisterRequest {
@@ -58,4 +72,140 @@ message UpdateUserRequest {
 
 message UserIDRequest {
     string id       = 1;
+}
+
+message GetStatementRequest {
+    string user_id  = 1;
+    string account_id = 2;
+    int64 page = 3;
+    int64 limit = 4;
+}
+
+message LedgerEntry {
+    string id            = 1;
+	string account_id     = 2;
+	string type = 3;
+	double amount        = 4;
+	double balance_after  = 5;
+	string description   = 6;
+	string reference_id   = 7;
+	string created_at     = 8;
+}
+
+message GetStatementResponse {
+    repeated LedgerEntry ledger_entries = 1;
+    int64 page = 2;
+    int64 limit = 3;
+    int64 total = 4;
+    int64 totalPages = 5;
+}
+
+message AccountTenantIDRequest {
+    string user_id = 1;
+    string account_id = 2;
+}
+
+message AccountTenantIDWithAmountRequest {
+    string user_id = 1;
+    string account_id = 2;
+    double amount = 3;
+}
+
+message CreateAccountRequest {
+    string user_id = 1;
+    string currency = 2;
+}
+
+message AccountResponse {
+    string id        = 1;
+	string user_id   = 2; 
+	double Balance   = 3;
+	string Currency  = 4;
+	string CreatedAt = 5;
+	string UpdatedAt = 6;
+}
+
+message AccountCheckResponse {
+    bool valid        = 1;
+}
+
+message AssetGetAllRequest {
+    int64 page = 1;
+    int64 limit = 2;
+    repeated string asset_type_filter = 3;
+}
+
+message AssetGetByTickerRequest {
+    string ticker = 1;
+}
+
+message AssetGetPricesFilter {
+    string from     = 1;
+	string to       = 2;
+	string interval = 3;
+}
+
+message AssetGetPricesByTicker {
+    string ticker = 1;
+    AssetGetPricesFilter filter = 2;
+}
+
+message AssetCreateAssetRequest {
+	string ticker   = 1;
+	string name     = 2;
+	string type     = 3;
+	string currency = 4;
+	bool   active   = 5;
+}
+
+message AssetUpdateAssetPriceByTickerRequest {
+	string ticker = 1;
+    string source = 2;
+    double price  = 3;
+}
+
+message AssetUpdateAssetRequest {
+	string id       = 1;
+	string ticker   = 2;
+	string name     = 3;
+	string type     = 4;
+	string currency = 5;
+	bool   active   = 6;
+}
+
+message AssetDeleteRequest {
+    string id = 1;
+}
+
+message AssetResponse {
+	string id               = 1;
+	string ticker           = 2;
+	string name             = 3;
+	string type             = 4;
+	string currency         = 5;
+	bool   active           = 6;
+	string created_at       = 7;
+	string updated_at       = 8;
+	double price            = 9; 
+	string price_updated_at = 10;
+}
+
+message PaginatedAssetResponse {
+    repeated AssetResponse assets = 1;
+    int64 page = 2;
+    int64 limit = 3;
+    int64 total = 4;
+    int64 totalPages = 5;
+}
+
+message AssetPriceResponse {
+    string id = 1;
+	string asset_id = 2;
+	double price = 3;
+	string source = 4;
+	string created_at = 5; 
+}
+
+message ManyAssetPriceResponse {
+    repeated AssetPriceResponse asset_prices = 1;
 }

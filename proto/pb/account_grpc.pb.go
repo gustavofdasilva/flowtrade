@@ -20,14 +20,27 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	AccountService_Register_FullMethodName     = "/hello.AccountService/Register"
-	AccountService_Login_FullMethodName        = "/hello.AccountService/Login"
-	AccountService_RefreshToken_FullMethodName = "/hello.AccountService/RefreshToken"
-	AccountService_Logout_FullMethodName       = "/hello.AccountService/Logout"
-	AccountService_LogoutAll_FullMethodName    = "/hello.AccountService/LogoutAll"
-	AccountService_UpdateUser_FullMethodName   = "/hello.AccountService/UpdateUser"
-	AccountService_DeleteUser_FullMethodName   = "/hello.AccountService/DeleteUser"
-	AccountService_GetMe_FullMethodName        = "/hello.AccountService/GetMe"
+	AccountService_Register_FullMethodName                 = "/hello.AccountService/Register"
+	AccountService_Login_FullMethodName                    = "/hello.AccountService/Login"
+	AccountService_RefreshToken_FullMethodName             = "/hello.AccountService/RefreshToken"
+	AccountService_Logout_FullMethodName                   = "/hello.AccountService/Logout"
+	AccountService_LogoutAll_FullMethodName                = "/hello.AccountService/LogoutAll"
+	AccountService_UpdateUser_FullMethodName               = "/hello.AccountService/UpdateUser"
+	AccountService_DeleteUser_FullMethodName               = "/hello.AccountService/DeleteUser"
+	AccountService_GetMe_FullMethodName                    = "/hello.AccountService/GetMe"
+	AccountService_GetStatement_FullMethodName             = "/hello.AccountService/GetStatement"
+	AccountService_Get_FullMethodName                      = "/hello.AccountService/Get"
+	AccountService_Create_FullMethodName                   = "/hello.AccountService/Create"
+	AccountService_Deposit_FullMethodName                  = "/hello.AccountService/Deposit"
+	AccountService_Withdrawal_FullMethodName               = "/hello.AccountService/Withdrawal"
+	AccountService_CheckBalance_FullMethodName             = "/hello.AccountService/CheckBalance"
+	AccountService_GetAll_FullMethodName                   = "/hello.AccountService/GetAll"
+	AccountService_GetByTicker_FullMethodName              = "/hello.AccountService/GetByTicker"
+	AccountService_GetPricesByTicker_FullMethodName        = "/hello.AccountService/GetPricesByTicker"
+	AccountService_CreateAsset_FullMethodName              = "/hello.AccountService/CreateAsset"
+	AccountService_UpdateAssetPriceByTicker_FullMethodName = "/hello.AccountService/UpdateAssetPriceByTicker"
+	AccountService_UpdateAsset_FullMethodName              = "/hello.AccountService/UpdateAsset"
+	AccountService_Delete_FullMethodName                   = "/hello.AccountService/Delete"
 )
 
 // AccountServiceClient is the client API for AccountService service.
@@ -42,6 +55,19 @@ type AccountServiceClient interface {
 	UpdateUser(ctx context.Context, in *UpdateUserRequest, opts ...grpc.CallOption) (*UserInfo, error)
 	DeleteUser(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	GetMe(ctx context.Context, in *UserIDRequest, opts ...grpc.CallOption) (*UserInfo, error)
+	GetStatement(ctx context.Context, in *GetStatementRequest, opts ...grpc.CallOption) (*GetStatementResponse, error)
+	Get(ctx context.Context, in *AccountTenantIDRequest, opts ...grpc.CallOption) (*AccountResponse, error)
+	Create(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
+	Deposit(ctx context.Context, in *AccountTenantIDWithAmountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
+	Withdrawal(ctx context.Context, in *AccountTenantIDWithAmountRequest, opts ...grpc.CallOption) (*AccountResponse, error)
+	CheckBalance(ctx context.Context, in *AccountTenantIDWithAmountRequest, opts ...grpc.CallOption) (*AccountCheckResponse, error)
+	GetAll(ctx context.Context, in *AssetGetAllRequest, opts ...grpc.CallOption) (*PaginatedAssetResponse, error)
+	GetByTicker(ctx context.Context, in *AssetGetByTickerRequest, opts ...grpc.CallOption) (*AssetResponse, error)
+	GetPricesByTicker(ctx context.Context, in *AssetGetPricesByTicker, opts ...grpc.CallOption) (*ManyAssetPriceResponse, error)
+	CreateAsset(ctx context.Context, in *AssetCreateAssetRequest, opts ...grpc.CallOption) (*AssetResponse, error)
+	UpdateAssetPriceByTicker(ctx context.Context, in *AssetUpdateAssetPriceByTickerRequest, opts ...grpc.CallOption) (*AssetResponse, error)
+	UpdateAsset(ctx context.Context, in *AssetUpdateAssetRequest, opts ...grpc.CallOption) (*AssetResponse, error)
+	Delete(ctx context.Context, in *AssetDeleteRequest, opts ...grpc.CallOption) (*AssetResponse, error)
 }
 
 type accountServiceClient struct {
@@ -132,6 +158,136 @@ func (c *accountServiceClient) GetMe(ctx context.Context, in *UserIDRequest, opt
 	return out, nil
 }
 
+func (c *accountServiceClient) GetStatement(ctx context.Context, in *GetStatementRequest, opts ...grpc.CallOption) (*GetStatementResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(GetStatementResponse)
+	err := c.cc.Invoke(ctx, AccountService_GetStatement_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) Get(ctx context.Context, in *AccountTenantIDRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AccountResponse)
+	err := c.cc.Invoke(ctx, AccountService_Get_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) Create(ctx context.Context, in *CreateAccountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AccountResponse)
+	err := c.cc.Invoke(ctx, AccountService_Create_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) Deposit(ctx context.Context, in *AccountTenantIDWithAmountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AccountResponse)
+	err := c.cc.Invoke(ctx, AccountService_Deposit_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) Withdrawal(ctx context.Context, in *AccountTenantIDWithAmountRequest, opts ...grpc.CallOption) (*AccountResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AccountResponse)
+	err := c.cc.Invoke(ctx, AccountService_Withdrawal_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) CheckBalance(ctx context.Context, in *AccountTenantIDWithAmountRequest, opts ...grpc.CallOption) (*AccountCheckResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AccountCheckResponse)
+	err := c.cc.Invoke(ctx, AccountService_CheckBalance_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) GetAll(ctx context.Context, in *AssetGetAllRequest, opts ...grpc.CallOption) (*PaginatedAssetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PaginatedAssetResponse)
+	err := c.cc.Invoke(ctx, AccountService_GetAll_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) GetByTicker(ctx context.Context, in *AssetGetByTickerRequest, opts ...grpc.CallOption) (*AssetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AssetResponse)
+	err := c.cc.Invoke(ctx, AccountService_GetByTicker_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) GetPricesByTicker(ctx context.Context, in *AssetGetPricesByTicker, opts ...grpc.CallOption) (*ManyAssetPriceResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ManyAssetPriceResponse)
+	err := c.cc.Invoke(ctx, AccountService_GetPricesByTicker_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) CreateAsset(ctx context.Context, in *AssetCreateAssetRequest, opts ...grpc.CallOption) (*AssetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AssetResponse)
+	err := c.cc.Invoke(ctx, AccountService_CreateAsset_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) UpdateAssetPriceByTicker(ctx context.Context, in *AssetUpdateAssetPriceByTickerRequest, opts ...grpc.CallOption) (*AssetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AssetResponse)
+	err := c.cc.Invoke(ctx, AccountService_UpdateAssetPriceByTicker_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) UpdateAsset(ctx context.Context, in *AssetUpdateAssetRequest, opts ...grpc.CallOption) (*AssetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AssetResponse)
+	err := c.cc.Invoke(ctx, AccountService_UpdateAsset_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *accountServiceClient) Delete(ctx context.Context, in *AssetDeleteRequest, opts ...grpc.CallOption) (*AssetResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(AssetResponse)
+	err := c.cc.Invoke(ctx, AccountService_Delete_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // AccountServiceServer is the server API for AccountService service.
 // All implementations must embed UnimplementedAccountServiceServer
 // for forward compatibility.
@@ -144,6 +300,19 @@ type AccountServiceServer interface {
 	UpdateUser(context.Context, *UpdateUserRequest) (*UserInfo, error)
 	DeleteUser(context.Context, *UserIDRequest) (*emptypb.Empty, error)
 	GetMe(context.Context, *UserIDRequest) (*UserInfo, error)
+	GetStatement(context.Context, *GetStatementRequest) (*GetStatementResponse, error)
+	Get(context.Context, *AccountTenantIDRequest) (*AccountResponse, error)
+	Create(context.Context, *CreateAccountRequest) (*AccountResponse, error)
+	Deposit(context.Context, *AccountTenantIDWithAmountRequest) (*AccountResponse, error)
+	Withdrawal(context.Context, *AccountTenantIDWithAmountRequest) (*AccountResponse, error)
+	CheckBalance(context.Context, *AccountTenantIDWithAmountRequest) (*AccountCheckResponse, error)
+	GetAll(context.Context, *AssetGetAllRequest) (*PaginatedAssetResponse, error)
+	GetByTicker(context.Context, *AssetGetByTickerRequest) (*AssetResponse, error)
+	GetPricesByTicker(context.Context, *AssetGetPricesByTicker) (*ManyAssetPriceResponse, error)
+	CreateAsset(context.Context, *AssetCreateAssetRequest) (*AssetResponse, error)
+	UpdateAssetPriceByTicker(context.Context, *AssetUpdateAssetPriceByTickerRequest) (*AssetResponse, error)
+	UpdateAsset(context.Context, *AssetUpdateAssetRequest) (*AssetResponse, error)
+	Delete(context.Context, *AssetDeleteRequest) (*AssetResponse, error)
 	mustEmbedUnimplementedAccountServiceServer()
 }
 
@@ -177,6 +346,45 @@ func (UnimplementedAccountServiceServer) DeleteUser(context.Context, *UserIDRequ
 }
 func (UnimplementedAccountServiceServer) GetMe(context.Context, *UserIDRequest) (*UserInfo, error) {
 	return nil, status.Error(codes.Unimplemented, "method GetMe not implemented")
+}
+func (UnimplementedAccountServiceServer) GetStatement(context.Context, *GetStatementRequest) (*GetStatementResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetStatement not implemented")
+}
+func (UnimplementedAccountServiceServer) Get(context.Context, *AccountTenantIDRequest) (*AccountResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Get not implemented")
+}
+func (UnimplementedAccountServiceServer) Create(context.Context, *CreateAccountRequest) (*AccountResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Create not implemented")
+}
+func (UnimplementedAccountServiceServer) Deposit(context.Context, *AccountTenantIDWithAmountRequest) (*AccountResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Deposit not implemented")
+}
+func (UnimplementedAccountServiceServer) Withdrawal(context.Context, *AccountTenantIDWithAmountRequest) (*AccountResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Withdrawal not implemented")
+}
+func (UnimplementedAccountServiceServer) CheckBalance(context.Context, *AccountTenantIDWithAmountRequest) (*AccountCheckResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CheckBalance not implemented")
+}
+func (UnimplementedAccountServiceServer) GetAll(context.Context, *AssetGetAllRequest) (*PaginatedAssetResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetAll not implemented")
+}
+func (UnimplementedAccountServiceServer) GetByTicker(context.Context, *AssetGetByTickerRequest) (*AssetResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetByTicker not implemented")
+}
+func (UnimplementedAccountServiceServer) GetPricesByTicker(context.Context, *AssetGetPricesByTicker) (*ManyAssetPriceResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPricesByTicker not implemented")
+}
+func (UnimplementedAccountServiceServer) CreateAsset(context.Context, *AssetCreateAssetRequest) (*AssetResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateAsset not implemented")
+}
+func (UnimplementedAccountServiceServer) UpdateAssetPriceByTicker(context.Context, *AssetUpdateAssetPriceByTickerRequest) (*AssetResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateAssetPriceByTicker not implemented")
+}
+func (UnimplementedAccountServiceServer) UpdateAsset(context.Context, *AssetUpdateAssetRequest) (*AssetResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateAsset not implemented")
+}
+func (UnimplementedAccountServiceServer) Delete(context.Context, *AssetDeleteRequest) (*AssetResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method Delete not implemented")
 }
 func (UnimplementedAccountServiceServer) mustEmbedUnimplementedAccountServiceServer() {}
 func (UnimplementedAccountServiceServer) testEmbeddedByValue()                        {}
@@ -343,6 +551,240 @@ func _AccountService_GetMe_Handler(srv interface{}, ctx context.Context, dec fun
 	return interceptor(ctx, in, info, handler)
 }
 
+func _AccountService_GetStatement_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetStatementRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).GetStatement(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_GetStatement_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).GetStatement(ctx, req.(*GetStatementRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_Get_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccountTenantIDRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).Get(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_Get_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).Get(ctx, req.(*AccountTenantIDRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_Create_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateAccountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).Create(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_Create_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).Create(ctx, req.(*CreateAccountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_Deposit_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccountTenantIDWithAmountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).Deposit(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_Deposit_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).Deposit(ctx, req.(*AccountTenantIDWithAmountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_Withdrawal_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccountTenantIDWithAmountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).Withdrawal(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_Withdrawal_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).Withdrawal(ctx, req.(*AccountTenantIDWithAmountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_CheckBalance_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AccountTenantIDWithAmountRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).CheckBalance(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_CheckBalance_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).CheckBalance(ctx, req.(*AccountTenantIDWithAmountRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_GetAll_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssetGetAllRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).GetAll(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_GetAll_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).GetAll(ctx, req.(*AssetGetAllRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_GetByTicker_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssetGetByTickerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).GetByTicker(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_GetByTicker_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).GetByTicker(ctx, req.(*AssetGetByTickerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_GetPricesByTicker_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssetGetPricesByTicker)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).GetPricesByTicker(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_GetPricesByTicker_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).GetPricesByTicker(ctx, req.(*AssetGetPricesByTicker))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_CreateAsset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssetCreateAssetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).CreateAsset(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_CreateAsset_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).CreateAsset(ctx, req.(*AssetCreateAssetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_UpdateAssetPriceByTicker_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssetUpdateAssetPriceByTickerRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).UpdateAssetPriceByTicker(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_UpdateAssetPriceByTicker_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).UpdateAssetPriceByTicker(ctx, req.(*AssetUpdateAssetPriceByTickerRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_UpdateAsset_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssetUpdateAssetRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).UpdateAsset(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_UpdateAsset_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).UpdateAsset(ctx, req.(*AssetUpdateAssetRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _AccountService_Delete_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AssetDeleteRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(AccountServiceServer).Delete(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: AccountService_Delete_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(AccountServiceServer).Delete(ctx, req.(*AssetDeleteRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // AccountService_ServiceDesc is the grpc.ServiceDesc for AccountService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -381,6 +823,58 @@ var AccountService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetMe",
 			Handler:    _AccountService_GetMe_Handler,
+		},
+		{
+			MethodName: "GetStatement",
+			Handler:    _AccountService_GetStatement_Handler,
+		},
+		{
+			MethodName: "Get",
+			Handler:    _AccountService_Get_Handler,
+		},
+		{
+			MethodName: "Create",
+			Handler:    _AccountService_Create_Handler,
+		},
+		{
+			MethodName: "Deposit",
+			Handler:    _AccountService_Deposit_Handler,
+		},
+		{
+			MethodName: "Withdrawal",
+			Handler:    _AccountService_Withdrawal_Handler,
+		},
+		{
+			MethodName: "CheckBalance",
+			Handler:    _AccountService_CheckBalance_Handler,
+		},
+		{
+			MethodName: "GetAll",
+			Handler:    _AccountService_GetAll_Handler,
+		},
+		{
+			MethodName: "GetByTicker",
+			Handler:    _AccountService_GetByTicker_Handler,
+		},
+		{
+			MethodName: "GetPricesByTicker",
+			Handler:    _AccountService_GetPricesByTicker_Handler,
+		},
+		{
+			MethodName: "CreateAsset",
+			Handler:    _AccountService_CreateAsset_Handler,
+		},
+		{
+			MethodName: "UpdateAssetPriceByTicker",
+			Handler:    _AccountService_UpdateAssetPriceByTicker_Handler,
+		},
+		{
+			MethodName: "UpdateAsset",
+			Handler:    _AccountService_UpdateAsset_Handler,
+		},
+		{
+			MethodName: "Delete",
+			Handler:    _AccountService_Delete_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
